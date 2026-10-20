@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#101827">
+<title>DetailPro — калькулятор химчистки</title>
+<style>
+:root{--bg:#0b1220;--panel:#121d30;--panel2:#17243a;--line:#293952;--text:#edf4ff;--muted:#9db0ca;--accent:#5eead4;--blue:#60a5fa;--warn:#fbbf24;--danger:#fb7185}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#172943 0%,var(--bg) 55%);color:var(--text);font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+button,input,select{font:inherit}button{cursor:pointer}
+.app{max-width:1180px;margin:auto;padding:18px 16px 40px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}.brand{display:flex;align-items:center;gap:11px}.logo{width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,var(--accent),#60a5fa);display:grid;place-items:center;color:#07131f;font-size:22px;font-weight:900}.brand h1{font-size:19px;margin:0}.brand p{margin:2px 0 0;color:var(--muted);font-size:12px}.pill{border:1px solid var(--line);border-radius:999px;padding:7px 11px;color:var(--accent);font-size:12px;white-space:nowrap}
+.layout{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(320px,.75fr);gap:16px}.panel{background:linear-gradient(180deg,rgba(22,35,56,.97),rgba(15,25,42,.97));border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:0 12px 40px #0002}.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}.section-head h2{font-size:17px;margin:0}.sub{font-size:12px;color:var(--muted);margin-top:3px}.tabs{display:flex;gap:6px;background:#0b1423;border:1px solid var(--line);border-radius:12px;padding:4px}.tabs button{border:0;background:transparent;color:var(--muted);border-radius:9px;padding:8px 12px}.tabs button.active{background:var(--accent);color:#06201e;font-weight:750}
+.vehicle{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px}.field label{display:block;color:var(--muted);font-size:12px;margin:0 0 5px}.field select,.field input{width:100%;background:#0b1423;border:1px solid var(--line);border-radius:10px;padding:10px;color:var(--text);outline:none}.field select:focus,.field input:focus{border-color:var(--accent)}
+.legend{display:flex;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:11px;margin:8px 0 2px}.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}.diagram-wrap{border:1px solid #263650;background:radial-gradient(ellipse at center,#192a41,#0a1424);border-radius:16px;padding:8px;min-height:280px;display:flex;align-items:center;justify-content:center;overflow:hidden}.car-svg{width:100%;max-height:390px;display:block}.part{stroke:#92a6c0;stroke-width:1.7;fill:#24364d;cursor:pointer;transition:fill .15s,stroke .15s}.part:hover{fill:#365574;stroke:#d6e8ff}.part.selected{fill:#0e746e;stroke:#5eead4;stroke-width:2.7}.glass{fill:#101b2c;stroke:#60758f;stroke-width:1.3;pointer-events:none}.wheel{fill:#070b12;stroke:#52637b;stroke-width:2}.wheel-core{fill:#40516a;stroke:#8294ad;stroke-width:1.3}.detail-label{font-size:10px;fill:#c9d8ed;pointer-events:none}.legend-hint{font-size:12px;color:var(--muted);margin:9px 0 0}.selected-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.chip{display:flex;align-items:center;gap:7px;background:#0e2930;border:1px solid #23605b;border-radius:9px;padding:6px 9px;font-size:12px}.chip button{border:0;background:none;color:#9edbd3;font-size:16px;padding:0}
+.controls{display:grid;gap:16px}.control-title{font-size:13px;font-weight:750;margin:0 0 8px}.severity{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.severity button{border:1px solid var(--line);background:#0b1423;color:var(--muted);padding:10px 5px;border-radius:11px;font-size:12px}.severity button.active{border-color:var(--warn);background:#392f16;color:#ffe4a0}.service-list{display:grid;gap:7px}.service{display:flex;align-items:flex-start;gap:10px;padding:10px;border:1px solid var(--line);border-radius:12px;background:#0d1727}.service input{accent-color:var(--accent);margin-top:4px}.service span{flex:1}.service strong{display:block;font-size:13px}.service small{display:block;color:var(--muted);font-size:11px;margin-top:2px}.service em{font-style:normal;font-weight:750;font-size:12px;white-space:nowrap}
+.summary{border:1px solid #28605c;background:linear-gradient(145deg,#102c31,#102237);border-radius:16px;padding:15px}.totalrow{display:flex;justify-content:space-between;align-items:end;gap:10px}.total{font-size:30px;letter-spacing:-1px;font-weight:850;color:var(--accent)}.totalrow small{color:var(--muted);display:block}.metrics{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}.metric{background:#091b29aa;border-radius:10px;padding:10px}.metric span{font-size:11px;color:var(--muted);display:block}.metric b{font-size:15px}.summary-note{font-size:11px;color:#9bb9bd;margin-top:10px}
+.primary{width:100%;border:0;border-radius:12px;background:var(--accent);color:#06201e;font-weight:850;padding:13px 15px}.secondary{border:1px solid var(--line);border-radius:11px;background:#0b1423;color:var(--text);padding:9px 12px}.actions{display:grid;grid-template-columns:1fr auto;gap:8px}.role{display:flex;gap:6px}.role button{padding:7px 10px;font-size:11px}
+.orderbox{display:none;margin-top:14px;padding:14px;border:1px solid var(--line);border-radius:14px;background:#0b1423}.orderbox.show{display:block}.orderbox h3{margin:0 0 10px}.ordergrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.orderbox .field{margin-bottom:9px}.order-result{margin-top:12px;padding:12px;background:#102b2b;border-radius:10px;white-space:pre-line;font-size:13px}
+.staff-only{display:none}.staff .staff-only{display:block}.footer{text-align:center;color:#71839b;font-size:11px;margin-top:16px}.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#e2fff8;color:#08231f;border-radius:12px;padding:10px 15px;font-weight:700;box-shadow:0 8px 30px #0005;display:none;z-index:5}.toast.show{display:block}
+@media(max-width:800px){.layout{grid-template-columns:1fr}.app{padding:13px 11px 30px}.panel{padding:14px}.diagram-wrap{min-height:245px}.top{align-items:flex-start}.brand h1{font-size:17px}.pill{font-size:10px}.total{font-size:28px}}
+@media(max-width:390px){.vehicle{grid-template-columns:1fr}.section-head{align-items:flex-start;flex-direction:column}.tabs{width:100%}.tabs button{flex:1}.ordergrid{grid-template-columns:1fr}}
+/* DetailPro 0.6 — visual reference diagram for body and cabin */
+.reference-panel{margin-top:20px;background:#fff;border:1px solid #e1e7e0;border-radius:20px;padding:18px;box-shadow:0 8px 30px #24392b0a}
+.reference-panel h2{font-size:19px;margin:0 0 6px;color:#17221d}
+.reference-panel p{margin:0 0 12px;color:#65756b;font-size:13px}
+.reference-image{display:block;width:100%;height:auto;border:1px solid #dce3dc;border-radius:12px;background:#07131f}
+@media(max-width:600px){.reference-panel{padding:12px;border-radius:15px}.reference-panel h2{font-size:17px}}
+
+
+/* DetailPro 0.3 — substantial visual refresh */
+:root{--bg:#f3f5f2;--panel:#ffffff;--panel2:#f7f9f6;--line:#dce3dc;--text:#17221d;--muted:#65756b;--accent:#b7f36b;--blue:#397b52;--warn:#f2b84b;--danger:#d95353}
+body{background:#f3f5f2;color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+.app{max-width:1380px;padding:24px 24px 50px}
+.top{padding:5px 2px 18px;border-bottom:1px solid #dce3dc;margin-bottom:22px}
+.logo{border-radius:13px;background:#17221d;color:#b7f36b;box-shadow:0 5px 12px #17221d20}
+.brand h1{font-size:23px;letter-spacing:-.8px}.brand p{color:#65756b;font-size:13px}
+.pill{background:#fff;border:1px solid #dce3dc;color:#397b52;font-weight:800;letter-spacing:.08em}
+.welcome{display:flex;align-items:center;justify-content:space-between;gap:18px;background:#17221d;color:#fff;border-radius:22px;padding:25px 28px;margin-bottom:20px;overflow:hidden;position:relative}
+.welcome:after{content:"";position:absolute;width:240px;height:240px;border:1px solid #ffffff18;border-radius:50%;right:30px;top:-120px;box-shadow:0 0 0 28px #ffffff08,0 0 0 56px #ffffff06}
+.welcome h2{font-size:clamp(22px,3vw,32px);letter-spacing:-1px;margin:6px 0 5px}.welcome p{color:#bdc9bf;margin:0;font-size:14px}.eyebrow,.step{display:block;font-size:10px;letter-spacing:.14em;font-weight:850;color:#51834b;margin-bottom:5px}.welcome .eyebrow{color:#b7f36b}.welcome-mark{font-size:31px;font-weight:900;letter-spacing:-2px;color:#b7f36b;z-index:1;white-space:nowrap}.welcome-mark span{font-size:12px;letter-spacing:0;color:#bdc9bf}
+.layout{grid-template-columns:minmax(0,1.15fr) minmax(360px,.85fr);gap:20px;align-items:start}
+.panel{background:#fff;border:1px solid #e1e7e0;border-radius:20px;padding:22px;box-shadow:0 8px 30px #24392b0a}
+.section-head h2{font-size:19px;letter-spacing:-.45px}.sub{color:#758379;font-size:12px}
+.vehicle{gap:12px;margin:18px 0 23px}.field label{color:#65756b;font-weight:700}.field select,.field input{background:#f7f9f6;color:#17221d;border-color:#dce3dc;border-radius:11px;padding:12px}.field select:focus,.field input:focus{border-color:#6eae57;box-shadow:0 0 0 3px #b7f36b40}
+.tabs{background:#f0f4ed;border-color:#e0e7dd;border-radius:12px}.tabs button{color:#68766c}.tabs button.active{background:#17221d;color:#b7f36b}
+.diagram-wrap{background:linear-gradient(145deg,#f7faf6,#eaf1e7);border:1px solid #dce7d7;border-radius:18px;min-height:310px;padding:15px}.part{fill:#d2ddd0;stroke:#70836e}.part:hover{fill:#bad7ad;stroke:#397b52}.part.selected{fill:#78b86b;stroke:#286a40}.glass{fill:#e8f1e7;stroke:#829980}.wheel{fill:#344238;stroke:#1c2a20}.wheel-core{fill:#a8b8a5;stroke:#647a61}.detail-label{fill:#334b35}.legend{color:#6c7a6f}.legend-hint{color:#758379}
+.chip{background:#eff8e9;border-color:#b8d6a9;color:#263c28}.chip button{color:#477a3d}.controls{gap:18px}.severity button{background:#f7f9f6;color:#66756b;border-color:#dce3dc;border-radius:11px;padding:12px}.severity button.active{border-color:#d9a33d;background:#fff5dc;color:#80570b}.service-list{gap:8px}.service{background:#f8faf7;border-color:#e2e8df;border-radius:12px;padding:12px}.service strong{color:#253329}.service small{color:#718075}.service em{color:#294c30}.service input{accent-color:#4b8b3f}
+.summary{background:#17221d;border:1px solid #17221d;border-radius:17px;padding:18px;color:#fff}.summary .step{color:#b7f36b;margin-bottom:13px}.total{color:#b7f36b;font-size:36px}.totalrow small,.metric span{color:#b9c8bb}.metric{background:#26352a;border:1px solid #344737}.metric b{color:#fff}.summary-note{color:#c1d1c3}.primary{background:#b7f36b;color:#17221d;border-radius:12px;padding:14px}.primary:hover{background:#a6e65b}.secondary{background:#fff;color:#253329;border-color:#dce3dc;border-radius:11px}.secondary:hover{background:#f1f7ed;border-color:#aac99c}.orderbox{background:#f8faf7;border-color:#dce3dc}.order-result{background:#edf7e8;color:#263c28}.staff-only .control-title{color:#263c28}.footer{color:#7d897f}.toast{background:#17221d;color:#b7f36b}
+#priceEditor .service input{background:#fff!important;color:#17221d!important;border-color:#dce3dc!important}
+#ordersBoard .service{background:#fff;border-color:#dce3dc}
+.role button{font-weight:750}
+@media(max-width:800px){.app{padding:12px 10px 28px}.welcome{padding:20px;border-radius:17px}.welcome-mark{font-size:24px}.layout{grid-template-columns:1fr}.panel{padding:16px}.diagram-wrap{min-height:270px}.section-head{align-items:flex-start}.vehicle{margin-top:13px}}
+
+
+.zone-picker{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:12px}
+.zone-option{display:flex;align-items:center;gap:8px;text-align:left;border:1px solid #dce3dc;border-radius:10px;background:#fff;color:#263c28;padding:10px;font-size:12px;min-height:42px}
+.zone-option:before{content:"";width:10px;height:10px;flex:0 0 10px;border:1.5px solid #91a18e;border-radius:3px;background:#fff}
+.zone-option.active{border-color:#4b8b3f;background:#edf7e8;font-weight:750}
+.zone-option.active:before{background:#4b8b3f;border-color:#4b8b3f;box-shadow:inset 0 0 0 2px #edf7e8}
+.zone-group{grid-column:1/-1;margin:6px 0 0;color:#66756b;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+@media(max-width:390px){.zone-picker{grid-template-columns:1fr}}
+.chip select,#ordersBoard select{background:#fff!important;color:#17221d!important;border-color:#dce3dc!important}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+<header class="top"><div class="brand"><div class="logo">D</div><div><h1>DetailPro</h1><p>Рабочее место детейлинг-центра</p></div></div><div class="pill">BETA · 0.6.1</div></header>
+<section class="welcome"><div><span class="eyebrow">DETAILING WORKSPACE</span><h2 id="workspaceTitle">Новый расчёт автомобиля</h2><p id="workspaceSub">Выберите автомобиль, отметьте зоны и получите предварительную смету.</p></div><div class="welcome-mark">DP<span> / 06</span></div></section>
+<div class="layout">
+<section class="panel">
+ <div class="section-head"><div><span class="step">ШАГ 01</span><h2>Автомобиль</h2><div class="sub">Выберите кузов и отметьте нужные детали</div></div><div class="role"><button class="secondary" id="clientRole">Клиент</button><button class="secondary" id="staffRole">Сотрудник</button></div></div>
+ <div class="vehicle">
+  <div class="field"><label for="make">Марка</label><select id="make"><option>BMW</option><option>Mercedes-Benz</option><option>Audi</option><option>Toyota</option><option>Volkswagen</option><option>Lada</option><option>Другая марка</option></select></div>
+  <div class="field"><label for="model">Модель</label><select id="model"><option>3 Series</option><option>5 Series</option><option>X3</option><option>X5</option></select></div>
+  <div class="field"><label for="generation">Поколение / год</label><select id="generation"><option>G20 · 2019–2024</option><option>G30 · 2017–2023</option><option>F30 · 2011–2019</option><option>Другое / не знаю</option></select></div>
+  <div class="field"><label for="body">Кузов</label><select id="body"><option>Седан</option><option>Универсал</option><option>Внедорожник</option><option>Купе</option><option>Хэтчбек</option><option>Минивэн</option></select></div>
+ </div>
+ <div class="section-head"><div><span class="step">ШАГ 02</span><h2>Схема деталей</h2><div class="sub">Нажмите на область, чтобы добавить её в расчёт</div></div><div class="tabs"><button class="active" id="exteriorTab">Снаружи</button><button id="interiorTab">Салон</button></div></div>
+ <div class="diagram-wrap" id="diagram"></div>
+ <div class="legend"><span><i class="dot" style="background:#d2ddd0;border:1px solid #70836e"></i>Не выбрано</span><span><i class="dot" style="background:#78b86b;border:1px solid #286a40"></i>Выбрано</span></div>
+ <p class="legend-hint">Схема условная, не является заводским чертежом модели. Для точного выбора используйте также понятный список зон ниже; каждая зона добавляется в расчёт нажатием.</p>
+ <div class="zone-picker" id="zonePicker" aria-label="Список зон для выбора"></div>
+ <div class="selected-list" id="selectedList"></div>
+ <div class="staff-only" style="margin-top:16px"><p class="control-title">Прайс-лист · редактирование</p><div class="sub">Измените стоимость детали или услуги и нажмите «Сохранить прайс». Данные сохраняются в этом браузере.</div><div id="priceEditor" class="service-list" style="margin-top:10px"></div><button class="secondary" id="savePrices" style="margin-top:10px">Сохранить прайс</button><button class="secondary" id="resetPrices" style="margin:10px 0 0 6px">Вернуть пример</button></div>
+</section>
+<aside class="panel controls">
+ <div><div class="section-head"><div><span class="step">ШАГ 03</span><h2>Состояние детали</h2><div class="sub">Влияет на цену и длительность. Применяется к зонам, которые вы добавите дальше; у уже выбранных степень меняется в списке под схемой.</div></div></div>
+ <div class="severity" id="severity"><button data-level="1" class="active">Лёгкое<br>×1,0</button><button data-level="2">Среднее<br>×1,3</button><button data-level="3">Сильное<br>×1,7</button></div></div>
+ <div><p class="control-title">Услуги</p><div class="service-list" id="services"></div></div>
+ <div class="staff-only"><p class="control-title">Настройка расчёта (демо)</p><div class="field"><label for="discount">Скидка, %</label><input type="number" id="discount" min="0" max="50" value="0"></div><div class="field"><label for="hourRate">Стоимость часа работ, ₽</label><input type="number" id="hourRate" min="0" value="1800"></div></div>
+ <div class="summary"><span class="step">ПРЕДВАРИТЕЛЬНАЯ СМЕТА</span><div class="totalrow"><div><small>Предварительная стоимость</small><div class="total" id="total">0 ₽</div></div><div style="text-align:right"><small>Выбрано деталей</small><b id="partCount">0</b></div></div><div class="metrics"><div class="metric"><span>Ориентировочное время</span><b id="duration">—</b></div><div class="metric"><span>Объём работ</span><b id="workload">—</b></div></div><div class="summary-note">Расчёт демонстрационный. Финальная стоимость зависит от осмотра, материалов и действующего прайса.</div></div>
+ <div class="actions"><button class="primary" id="orderBtn">Оформить заявку</button><button class="secondary" id="resetBtn">Сбросить</button></div>
+ <div class="orderbox" id="orderbox"><h3>Данные для заявки</h3><div class="ordergrid"><div class="field"><label for="customer">Имя</label><input id="customer" placeholder="Как к вам обращаться"></div><div class="field"><label for="phone">Телефон</label><input id="phone" type="tel" placeholder="+7 ..."></div></div><div class="ordergrid"><div class="field"><label for="date">Желаемая дата</label><input id="date" type="date"></div><div class="field"><label for="time">Время</label><select id="time"><option>10:00</option><option>12:00</option><option>14:00</option><option>16:00</option><option>18:00</option></select></div></div><div class="field"><label for="comment">Комментарий</label><input id="comment" placeholder="Например, пятна от кофе"></div><button class="primary" id="submitOrder">Отправить заявку</button><div class="order-result" id="orderResult"></div></div>
+ <div class="staff-only" style="margin-top:18px"><div class="section-head"><div><h2>Заявки клиентов</h2><div class="sub">Локальный список для проверки сценария</div></div><button class="secondary" id="refreshOrders">Обновить</button></div><div id="ordersBoard" class="service-list"></div><button class="secondary" id="exportOrders" style="margin-top:10px">Экспорт заявок JSON</button></div>
+</aside>
+</div>
+<section class="reference-panel" aria-labelledby="referenceTitle">
+ <h2 id="referenceTitle">Наглядная схема кузова и салона</h2>
+ <p>Справочная иллюстрация для ориентации по зонам. Для включения детали в смету нажимайте зоны в интерактивной схеме выше: эта картинка сама по себе не является интерактивной.</p>
+ <img class="reference-image" src="vehicle-zones-reference.png" alt="Схема внешних зон кузова с видами спереди, сзади, сверху и с боков, а также схема внутренних зон салона" loading="lazy">
+</section>
+<div class="footer">DetailPro · прототип для проверки сценария · заявки сохраняются только в текущем браузере</div>
+</div><div class="toast" id="toast"></div>
+<script>
+const partData={
+ exterior:[
+ {id:'hood',name:'Капот',price:1200,min:25,kind:'panel',x:118,y:34,w:124,h:50},
+ {id:'roof',name:'Крыша',price:900,min:20,kind:'panel',x:118,y:94,w:124,h:91},
+ {id:'trunk',name:'Крышка багажника',price:1000,min:22,kind:'panel',x:118,y:193,w:124,h:48},
+ {id:'frontBumper',name:'Передний бампер',price:1100,min:25,kind:'panel',x:124,y:8,w:112,h:18},
+ {id:'rearBumper',name:'Задний бампер',price:1000,min:22,kind:'panel',x:124,y:245,w:112,h:18},
+ {id:'leftFrontDoor',name:'Левая передняя дверь',price:900,min:22,kind:'panel',x:70,y:101,w:35,h:36},
+ {id:'leftRearDoor',name:'Левая задняя дверь',price:900,min:22,kind:'panel',x:70,y:141,w:35,h:36},
+ {id:'rightFrontDoor',name:'Правая передняя дверь',price:900,min:22,kind:'panel',x:255,y:101,w:35,h:36},
+ {id:'rightRearDoor',name:'Правая задняя дверь',price:900,min:22,kind:'panel',x:255,y:141,w:35,h:36},
+ {id:'frontLeftFender',name:'Левое переднее крыло',price:900,min:20,kind:'panel',x:88,y:48,w:22,h:42},
+ {id:'frontRightFender',name:'Правое переднее крыло',price:900,min:20,kind:'panel',x:250,y:48,w:22,h:42},
+ {id:'leftRearFender',name:'Левое заднее крыло',price:900,min:20,kind:'panel',x:88,y:194,w:22,h:42},
+ {id:'rightRearFender',name:'Правое заднее крыло',price:900,min:20,kind:'panel',x:250,y:194,w:22,h:42},
+ {id:'leftMirror',name:'Левое зеркало',price:350,min:10,kind:'panel',x:65,y:91,w:14,h:15},
+ {id:'rightMirror',name:'Правое зеркало',price:350,min:10,kind:'panel',x:281,y:91,w:14,h:15},
+ {id:'wheels',name:'Колёса передние (2 шт.)',price:900,min:20,kind:'panel',x:60,y:53,w:26,h:39},
+ {id:'wheelsR',name:'Колёса задние (2 шт.)',price:900,min:20,kind:'panel',x:274,y:196,w:26,h:39},
+ {id:'glass',name:'Стёкла снаружи',price:800,min:18,kind:'panel',x:135,y:75,w:90,h:14},
+ {id:'sills',name:'Пороги',price:700,min:20,kind:'panel',x:106,y:184,w:148,h:8}
+ ],
+ interior:[
+ {id:'driverSeat',name:'Водительское сиденье',price:1500,min:35,kind:'seat',x:125,y:79,w:42,h:48},
+ {id:'passengerSeat',name:'Пассажирское сиденье',price:1500,min:35,kind:'seat',x:193,y:79,w:42,h:48},
+ {id:'rearSeats',name:'Задний диван',price:2200,min:45,kind:'seat',x:121,y:143,w:118,h:34},
+ {id:'frontCarpet',name:'Передние ковры',price:900,min:25,kind:'panel',x:119,y:61,w:122,h:13},
+ {id:'rearCarpet',name:'Задний ковёр',price:900,min:25,kind:'panel',x:119,y:132,w:122,h:9},
+ {id:'dashboard',name:'Передняя панель / торпедо',price:1200,min:30,kind:'panel',x:113,y:42,w:134,h:13},
+ {id:'steeringWheel',name:'Руль',price:450,min:12,kind:'panel',x:132,y:57,w:25,h:20},
+ {id:'floor',name:'Пол салона',price:1300,min:35,kind:'panel',x:119,y:179,w:122,h:8},
+ {id:'pillars',name:'Стойки и обшивки',price:800,min:25,kind:'panel',x:108,y:87,w:12,h:88},
+ {id:'centerConsole',name:'Центральная консоль',price:700,min:20,kind:'panel',x:174,y:76,w:12,h:57},
+ {id:'doorCards',name:'Дверные карты (4 шт.)',price:1600,min:35,kind:'panel',x:82,y:70,w:24,h:105},
+ {id:'ceiling',name:'Потолок',price:1800,min:45,kind:'panel',x:122,y:94,w:114,h:32},
+ {id:'trunkInterior',name:'Багажник внутри',price:1200,min:30,kind:'panel',x:122,y:187,w:114,h:34},
+ {id:'belts',name:'Ремни безопасности',price:700,min:20,kind:'panel',x:107,y:128,w:14,h:20}
+ ]};
+const serviceData=[
+{id:'vacuum',name:'Пылесос салона',desc:'Сухая уборка пола и щелей',price:900,min:25,default:true},
+{id:'steam',name:'Паровая обработка',desc:'Дополнительная обработка поверхностей',price:1200,min:30},
+{id:'odor',name:'Удаление запахов',desc:'Обработка нейтрализатором запаха',price:1500,min:35},
+{id:'leather',name:'Кондиционер кожи',desc:'Защита и уход за кожаными деталями',price:1000,min:20},
+{id:'ceramic',name:'Защитное покрытие',desc:'Защита обработанных поверхностей',price:2000,min:40}
+];
+let view='exterior', selected=new Set(), levels={}, level=1, role='client', services=new Set(['vacuum']);
+const defaultPartPrices=Object.fromEntries([...partData.exterior,...partData.interior].map(p=>[p.id,p.price]));
+const defaultServicePrices=Object.fromEntries(serviceData.map(s=>[s.id,s.price]));
+function loadPrices(){try{const x=JSON.parse(localStorage.getItem("detailpro_prices")||"{}");Object.entries(x.parts||{}).forEach(([id,v])=>{const p=allParts().find(p=>p.id===id);if(p&&Number.isFinite(+v))p.price=Math.max(0,+v)});Object.entries(x.services||{}).forEach(([id,v])=>{const a=serviceData.find(s=>s.id===id);if(a&&Number.isFinite(+v))a.price=Math.max(0,+v)})}catch(e){}}
+const $=id=>document.getElementById(id);
+const esc=v=>String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=n=>Math.round(n).toLocaleString('ru-RU')+' ₽';
+function allParts(){return [...partData.exterior,...partData.interior]}
+function svgShape(p){let cls='part'+(selected.has(p.id)?' selected':'');if(view==='exterior'&&(p.id==='wheels'||p.id==='wheelsR')){const y=p.id==='wheels'?71.5:217.5;return [72.5,292.5].map(x=>`<g data-part="${p.id}" style="cursor:pointer"><rect class="${cls}" x="${x-14.5}" y="${y-23.5}" width="29" height="47" rx="10"/><circle class="wheel-core" cx="${x}" cy="${y}" r="6" pointer-events="none"/></g>`).join('')}
+if(view==='interior'&&(p.id==='driverSeat'||p.id==='passengerSeat'||p.id==='rearSeats'))return `<g data-part="${p.id}" style="cursor:pointer"><rect class="${cls}" x="${p.x}" y="${p.y}" width="${p.w}" height="${p.h}" rx="8"/><path d="M${p.x+7} ${p.y+10}h${p.w-14} M${p.x+7} ${p.y+20}h${p.w-14}" stroke="#8397b0" fill="none" pointer-events="none"/></g>`;
+return `<rect data-part="${p.id}" class="${cls}" x="${p.x}" y="${p.y}" width="${p.w}" height="${p.h}" rx="${p.h<20?5:10}"/>`}
+function renderDiagram(){
+ const isExt=view==='exterior';
+ const body=isExt?`<path d="M108 24 Q116 13 135 13 L231 13 Q250 13 258 24 L279 53 Q292 67 292 88 L292 202 Q292 223 278 238 L257 257 Q249 266 231 266 L135 266 Q117 266 108 257 L87 238 Q73 223 73 202 L73 88 Q73 67 87 53 Z" fill="#18283d" stroke="#8295ad" stroke-width="2"/>
+ <path class="glass" d="M119 62 Q124 51 137 50 L229 50 Q242 51 247 62 L255 83 L111 83 Z"/>
+ <path class="glass" d="M111 99 L255 99 L255 179 L111 179 Z"/>
+ <path class="glass" d="M119 196 L247 196 L237 222 Q232 229 220 229 L146 229 Q134 229 129 222 Z"/>
+ <path d="M108 91H258 M108 187H258" stroke="#8295ad" stroke-width="1.3" fill="none" pointer-events="none"/>
+ <path d="M135 25h96 M132 249h102" stroke="#506681" stroke-width="2" pointer-events="none"/>`
+ :`<rect x="82" y="19" width="200" height="238" rx="37" fill="#18283d" stroke="#8295ad" stroke-width="2"/>
+ <rect class="glass" x="110" y="34" width="144" height="42" rx="12"/><rect class="glass" x="110" y="182" width="144" height="53" rx="13"/>
+ <path d="M108 82H256 M108 175H256" stroke="#8295ad" stroke-width="1.3" fill="none" pointer-events="none"/>
+ <rect x="108" y="81" width="148" height="93" rx="12" fill="#111d30" stroke="#60758f" stroke-width="1.3" pointer-events="none"/>
+ <path d="M182 82V174" stroke="#60758f" stroke-width="1.3" pointer-events="none"/>`;
+ const wheels=isExt?`<rect class="wheel" x="58" y="48" width="29" height="47" rx="10"/><rect class="wheel" x="58" y="194" width="29" height="47" rx="10"/><rect class="wheel" x="278" y="48" width="29" height="47" rx="10"/><rect class="wheel" x="278" y="194" width="29" height="47" rx="10"/>`:'';
+ const parts=partData[view].map(svgShape).join('');
+ $('diagram').innerHTML=`<svg class="car-svg" viewBox="35 0 295 280" role="img" aria-label="${isExt?'Схема автомобиля снаружи':'Схема салона автомобиля'}">${wheels}${body}${parts}</svg>`;
+ $('diagram').querySelectorAll('[data-part]').forEach(el=>el.addEventListener('click',()=>togglePart(el.dataset.part)));
+ renderZonePicker();
+}
+function togglePart(id){if(selected.has(id))selected.delete(id);else{selected.add(id);levels[id]=level}renderDiagram();renderZonePicker();renderSelected();calc()}
+function renderZonePicker(){
+ const list=partData[view]||[]; const groups={};
+ list.forEach(p=>{let g=p.group||((view==='exterior')?'Кузов и внешние детали':'Зоны салона');(groups[g]||(groups[g]=[])).push(p)});
+ $('zonePicker').innerHTML=Object.entries(groups).map(([g,items])=>`<div class="zone-group">${g}</div>${items.map(p=>`<button type="button" class="zone-option ${selected.has(p.id)?'active':''}" data-zone="${p.id}" aria-pressed="${selected.has(p.id)}">${p.name}</button>`).join('')}`).join('');
+ $('zonePicker').querySelectorAll('[data-zone]').forEach(b=>b.onclick=()=>togglePart(b.dataset.zone));
+}
+function renderSelected(){$('selectedList').innerHTML=[...selected].map(id=>{let p=allParts().find(x=>x.id===id),lv=levels[id]||1;return `<span class="chip" style="flex-wrap:wrap">${p.name} <select aria-label="Степень загрязнения: ${p.name}" data-levelpart="${id}" style="max-width:125px;background:#0b1423;color:#edf4ff;border:1px solid #293952;border-radius:7px;padding:4px"><option value="1" ${lv===1?'selected':''}>Лёгкое</option><option value="2" ${lv===2?'selected':''}>Среднее</option><option value="3" ${lv===3?'selected':''}>Сильное</option></select><button aria-label="Удалить ${p.name}" data-remove="${id}">×</button></span>`}).join('');$('selectedList').querySelectorAll('[data-remove]').forEach(b=>b.onclick=()=>togglePart(b.dataset.remove));$('selectedList').querySelectorAll('[data-levelpart]').forEach(sel=>sel.onchange=()=>{levels[sel.dataset.levelpart]=+sel.value;calc()});$('partCount').textContent=selected.size}
+function renderServices(){$('services').innerHTML=serviceData.map(s=>`<label class="service"><input type="checkbox" data-service="${s.id}" ${services.has(s.id)?'checked':''}><span><strong>${s.name}</strong><small>${s.desc}</small></span><em>${fmt(s.price)}</em></label>`).join('');$('services').querySelectorAll('input').forEach(i=>i.onchange=()=>{i.checked?services.add(i.dataset.service):services.delete(i.dataset.service);calc()})}
+function calc(){
+ const parts=allParts().filter(p=>selected.has(p.id)), chosenServices=serviceData.filter(s=>services.has(s.id));
+ const partSum=parts.reduce((a,p)=>a+p.price*({1:1,2:1.3,3:1.7}[levels[p.id]||1]),0), serviceSum=chosenServices.reduce((a,s)=>a+s.price,0), rate=$('hourRate').value===''?1800:Math.max(0,Number($('hourRate').value)||0);
+ let subtotal=partSum+serviceSum;const discount=role==='staff'?Math.min(50,Math.max(0,Number($('discount').value)||0)):0;let total=subtotal*(1-discount/100);
+ let minutes=parts.reduce((a,p)=>a+p.min*({1:1,2:1.3,3:1.7}[levels[p.id]||1]),0)+chosenServices.reduce((a,s)=>a+s.min,0);
+ if(rate!==1800&&role==='staff'&&minutes>0)total=total+(minutes/60)*(rate-1800);
+ $('total').textContent=fmt(Math.max(0,total));$('duration').textContent=minutes?`${Math.round(minutes/15)*15}–${Math.round(minutes/15)*15+30} мин`:'—';$('workload').textContent=minutes?`${(minutes/60).toFixed(1).replace('.',',')} ч`:'—';$('partCount').textContent=selected.size;
+ return {parts,chosenServices,total:Math.max(0,total),minutes,discount,levels:{...levels}};
+}
+function toast(msg){$('toast').textContent=msg;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2200)}
+$('exteriorTab').onclick=()=>{view='exterior';$('exteriorTab').classList.add('active');$('interiorTab').classList.remove('active');renderDiagram()};
+$('interiorTab').onclick=()=>{view='interior';$('interiorTab').classList.add('active');$('exteriorTab').classList.remove('active');renderDiagram()};
+$('severity').querySelectorAll('button').forEach(b=>b.onclick=()=>{level=Number(b.dataset.level);$('severity').querySelectorAll('button').forEach(x=>x.classList.toggle('active',x===b));calc()});
+function setRole(r){role=r;const wt=$('workspaceTitle'),ws=$('workspaceSub');if(wt&&ws){wt.textContent=r==='staff'?'Панель сотрудника':'Новый расчёт автомобиля';ws.textContent=r==='staff'?'Управляйте прайсом, проверяйте заявки и обновляйте их статусы.':'Выберите автомобиль, отметьте зоны и получите предварительную смету.';}$('app').classList.toggle('staff',r==='staff');$('clientRole').style.borderColor=r==='client'?'var(--accent)':'var(--line)';$('staffRole').style.borderColor=r==='staff'?'var(--accent)':'var(--line)';calc()}
+$('clientRole').onclick=()=>setRole('client');$('staffRole').onclick=()=>setRole('staff');
+['discount','hourRate','make','model','generation','body'].forEach(id=>$(id).addEventListener('change',calc));
+const vehicleCatalog={
+ 'BMW':{'3 Series':['E90 · 2005–2012','F30 · 2011–2019','G20 · 2019–2024','G20 LCI · 2022–н.в.'],'5 Series':['E60 · 2003–2010','F10 · 2010–2017','G30 · 2017–2023','G60 · 2023–н.в.'],'X3':['E83 · 2003–2010','F25 · 2010–2017','G01 · 2017–2024'],'X5':['E70 · 2006–2013','F15 · 2013–2018','G05 · 2018–н.в.']},
+ 'Mercedes-Benz':{'C-Class':['W204 · 2007–2014','W205 · 2014–2021','W206 · 2021–н.в.'],'E-Class':['W212 · 2009–2016','W213 · 2016–2023','W214 · 2023–н.в.'],'GLC':['X253 · 2015–2022','X254 · 2022–н.в.'],'GLE':['W166 · 2011–2019','V167 · 2018–н.в.']},
+ 'Audi':{'A4':['B8 · 2007–2015','B9 · 2015–н.в.'],'A6':['C7 · 2011–2018','C8 · 2018–н.в.'],'Q5':['8R · 2008–2017','FY · 2017–н.в.'],'Q7':['4L · 2005–2015','4M · 2015–н.в.']},
+ 'Toyota':{'Camry':['XV40 · 2006–2011','XV50 · 2011–2017','XV70 · 2017–2024','XV80 · 2024–н.в.'],'Corolla':['E150 · 2006–2013','E180 · 2013–2019','E210 · 2018–н.в.'],'RAV4':['XA30 · 2005–2012','XA40 · 2012–2018','XA50 · 2018–н.в.'],'Land Cruiser':['200 Series · 2007–2021','300 Series · 2021–н.в.']},
+ 'Volkswagen':{'Polo':['Sedan · 2010–2020','Liftback · 2020–н.в.'],'Golf':['Mk6 · 2008–2012','Mk7 · 2012–2020','Mk8 · 2019–н.в.'],'Passat':['B7 · 2010–2015','B8 · 2014–2023'],'Tiguan':['I · 2007–2016','II · 2016–2024','III · 2024–н.в.']},
+ 'Lada':{'Granta':['I · 2011–н.в.'],'Vesta':['I · 2015–н.в.'],'Niva':['Legend · 1977–н.в.','Travel · 2020–н.в.'],'Largus':['I · 2012–н.в.']},'Другая марка':{'Модель не указана':['Другое / не знаю']}};
+function fillModels(){const models=Object.keys(vehicleCatalog[$('make').value]||{'Модель не указана':['Другое / не знаю']});$('model').innerHTML=models.map(x=>`<option>${x}</option>`).join('');fillGenerations()}function fillGenerations(){const gens=(vehicleCatalog[$('make').value]||{})[$('model').value]||['Другое / не знаю'];$('generation').innerHTML=gens.map(x=>`<option>${x}</option>`).join('');calc()}$('make').onchange=fillModels;$('model').onchange=fillGenerations;
+$('resetBtn').onclick=()=>{selected.clear();levels={};level=1;services=new Set(['vacuum']);$('severity').querySelectorAll('button').forEach((b,i)=>b.classList.toggle('active',i===0));renderServices();renderDiagram();renderSelected();calc();toast('Расчёт сброшен')};
+$('orderBtn').onclick=()=>{$('orderbox').classList.toggle('show');if($('orderbox').classList.contains('show'))$('orderbox').scrollIntoView({behavior:'smooth',block:'nearest'})};
+$('submitOrder').onclick=()=>{
+ const c=calc(), name=$('customer').value.trim(), phone=$('phone').value.trim();
+ if(!c.parts.length&&!c.chosenServices.length){toast('Выберите хотя бы одну деталь или услугу');return}
+ if(!name||!phone){toast('Укажите имя и телефон');return}
+ const order={id:'DP-'+Date.now().toString().slice(-6),created:new Date().toLocaleString('ru-RU'),name,phone,car:`${$('make').value} ${$('model').value}, ${$('generation').value}, ${$('body').value}`,parts:c.parts.map(p=>({name:p.name,severity:['','лёгкая','средняя','сильная'][c.levels[p.id]||1]})),services:c.chosenServices.map(s=>s.name),price:Math.round(c.total),minutes:c.minutes,date:$('date').value,time:$('time').value,comment:$('comment').value.trim(),status:'Новая'};
+ const orders=JSON.parse(localStorage.getItem('detailpro_orders')||'[]');orders.push(order);localStorage.setItem('detailpro_orders',JSON.stringify(orders));
+ $('orderResult').textContent=`Заявка ${order.id} сохранена в этом браузере.\n${order.car}\nДетали: ${order.parts.map(p=>p.name+' ('+p.severity+')').join(', ')||'не выбраны'}\nУслуги: ${order.services.join(', ')||'не выбраны'}\nИтого: ${fmt(order.price)} · ориентир ${Math.round(order.minutes/15)*15}–${Math.round(order.minutes/15)*15+30} мин\nСтатус: ${order.status}`;renderOrders();toast('Заявка сохранена в браузере');
+};
+function renderPriceEditor(){const items=[...allParts().map(p=>({id:p.id,name:p.name,price:p.price,type:'parts'})),...serviceData.map(p=>({id:p.id,name:p.name,price:p.price,type:'services'}))];$('priceEditor').innerHTML=items.map(p=>`<div class="service"><span><strong>${p.name}</strong><small>${p.type==='parts'?'Деталь':'Услуга'}</small></span><input aria-label="Цена ${p.name}" type="number" min="0" step="50" data-price-type="${p.type}" data-price-id="${p.id}" value="${p.price}" style="width:105px;background:#0b1423;color:#edf4ff;border:1px solid #293952;border-radius:8px;padding:8px"></div>`).join('')}
+function savePrices(){const data={parts:{},services:{}};$('priceEditor').querySelectorAll('[data-price-id]').forEach(i=>{const v=Math.max(0,Number(i.value)||0);data[i.dataset.priceType][i.dataset.priceId]=v;const target=i.dataset.priceType==='parts'?allParts().find(p=>p.id===i.dataset.priceId):serviceData.find(p=>p.id===i.dataset.priceId);if(target)target.price=v});localStorage.setItem('detailpro_prices',JSON.stringify(data));renderServices();calc();toast('Прайс сохранён на этом устройстве')}
+function getOrders(){try{return JSON.parse(localStorage.getItem('detailpro_orders')||'[]')}catch(e){return []}}
+function renderOrders(){if(!$('ordersBoard'))return;const orders=getOrders();if(!orders.length){$('ordersBoard').innerHTML='<div class="sub">Заявок пока нет. Создайте заявку в режиме «Клиент».</div>';return}$('ordersBoard').innerHTML=orders.slice().reverse().map(o=>`<div class="service" style="display:block"><div style="display:flex;justify-content:space-between;gap:8px"><strong>${esc(o.id)} · ${esc(o.name||'Клиент')}</strong><b>${fmt(o.price||0)}</b></div><small>${esc(o.created)} · ${esc(o.car)}</small><small>Телефон: ${esc(o.phone||'—')} · ${esc(o.date||'дата не выбрана')} ${esc(o.time)}</small><small>Детали: ${esc((o.parts||[]).map(p=>typeof p==='string'?p:p.name+' ('+p.severity+')').join(', ')||'—')}</small><div style="display:flex;gap:8px;align-items:center;margin-top:9px;flex-wrap:wrap"><label class="sub" for="status-${o.id}">Статус</label><select id="status-${o.id}" data-status-id="${o.id}" style="background:#0b1423;color:#edf4ff;border:1px solid #293952;border-radius:8px;padding:7px"><option ${o.status==='Новая'?'selected':''}>Новая</option><option ${o.status==='Подтверждена'?'selected':''}>Подтверждена</option><option ${o.status==='В работе'?'selected':''}>В работе</option><option ${o.status==='Готово'?'selected':''}>Готово</option><option ${o.status==='Отменена'?'selected':''}>Отменена</option></select><button class="secondary" data-delete-order="${o.id}">Удалить</button></div>${o.comment?`<small>Комментарий: ${esc(o.comment)}</small>`:''}</div>`).join('');$('ordersBoard').querySelectorAll('[data-status-id]').forEach(sel=>sel.onchange=()=>{const arr=getOrders(),o=arr.find(x=>x.id===sel.dataset.statusId);if(o)o.status=sel.value;localStorage.setItem('detailpro_orders',JSON.stringify(arr));toast('Статус обновлён')});$('ordersBoard').querySelectorAll('[data-delete-order]').forEach(b=>b.onclick=()=>{if(!confirm('Удалить заявку '+b.dataset.deleteOrder+'?'))return;localStorage.setItem('detailpro_orders',JSON.stringify(getOrders().filter(o=>o.id!==b.dataset.deleteOrder)));renderOrders()})}
+$('savePrices').onclick=savePrices;$('resetPrices').onclick=()=>{allParts().forEach(p=>p.price=defaultPartPrices[p.id]);serviceData.forEach(p=>p.price=defaultServicePrices[p.id]);localStorage.removeItem('detailpro_prices');renderPriceEditor();renderServices();calc();toast('Возвращён демонстрационный прайс')};$('refreshOrders').onclick=renderOrders;$('exportOrders').onclick=()=>{const json=JSON.stringify(getOrders(),null,2);if(window.AndroidBridge&&AndroidBridge.saveTextFile){AndroidBridge.saveTextFile('detailpro-orders.json','application/json',json);return}const blob=new Blob([json],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='detailpro-orders.json';a.click();URL.revokeObjectURL(url)};
+loadPrices();fillModels();renderDiagram();renderServices();renderSelected();renderPriceEditor();renderOrders();calc();
+</script>
+</body></html>
